@@ -2,6 +2,7 @@ package com.example.blogpost.service;
 
 import com.example.blogpost.entity.User;
 import com.example.blogpost.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,15 @@ public class UserServiceImpl  implements UserService {
     {
         return userRepository.findById(userId).orElse(null);
     }
+
+    @Override
+    public User getUserByUsername(String username) {
+
+       return userRepository.findByUserName(username)
+               .orElseThrow(()-> new EntityNotFoundException("user not found."));
+
+    }
+
     public User updateUser(Long userId, User newUser)
     {
         Optional<User> user = userRepository.findById(userId);
