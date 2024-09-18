@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.blogpost.constants.BlogpostConstants.ADMIN_ID;
+
 @Service
 public class CommentServiceImpl implements CommentService {
 
@@ -30,9 +32,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     public Comment createComment(Long postId, String postedBy , String content){
-        Optional<Post> optionalPost = postRepository.findById(postId);
-
         User user = userService.getUserByUsername(postedBy);
+
+        Optional<Post> optionalPost = postRepository.findById(postId);
 
         if(optionalPost.isPresent())
         {
@@ -53,6 +55,27 @@ public class CommentServiceImpl implements CommentService {
     public List<Comment> getCommentsByPostId(Long postId)
     {
         return commentRepository.findByPostId(postId);
+    }
+
+    @Override
+    public Comment getCommentById(Long commentId){
+        return commentRepository.findById(commentId)
+                .orElseThrow(()-> new EntityNotFoundException("comment not found."));
+
+
+
+    }
+    @Override
+    public void deleteComment(Long commentId, Long userId) {
+
+        Comment comment = getCommentById(commentId);
+        User commentAuthor = comment.getUser();
+
+        if (!userId.equals(commentAuthor.getId()) && !ADMIN_ID.equals(userId)){
+            throw new RuntimeException("NOT AUTHORIZED");
+        }
+        commentRepository.deleteById(commentId);
+
     }
 }
 

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.blogpost.constants.BlogpostConstants.ADMIN_ID;
+
 @Service
 public class UserServiceImpl  implements UserService {
 
@@ -40,6 +42,10 @@ public class UserServiceImpl  implements UserService {
     public User updateUser(Long userId, User newUser)
     {
         Optional<User> user = userRepository.findById(userId);
+        if (!userId.equals(newUser.getId()) && !ADMIN_ID.equals(userId)){
+            throw new RuntimeException("NOT AUTHORIZED");
+        }
+
         if(user.isPresent()){
             User updatedUser = user.get();
             updatedUser.setUserName(newUser.getUserName());
@@ -48,7 +54,11 @@ public class UserServiceImpl  implements UserService {
             return updatedUser;
         }else return null;
     }
-    public void deleteById(Long userId){
+    public void deleteById(Long userId, Long adminId){
+
+        if (!ADMIN_ID.equals(adminId)){
+            throw new RuntimeException("NOT AUTHORIZED");
+        }
         userRepository.deleteById(userId);
     }
 }

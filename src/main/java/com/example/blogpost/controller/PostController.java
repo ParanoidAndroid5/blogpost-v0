@@ -82,4 +82,9 @@ public class PostController {
         }
     }
 
+    @DeleteMapping("/{postId}")
+    public void deletePostById(@PathVariable Long postId, @RequestParam Long adminUserId){
+        postService.deletePostById(postId, adminUserId);
+    }
+
 }

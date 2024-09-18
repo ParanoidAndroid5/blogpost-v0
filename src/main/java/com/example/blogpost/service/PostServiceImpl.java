@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static com.example.blogpost.constants.BlogpostConstants.ADMIN_ID;
+
 @Service
 public class PostServiceImpl implements PostService {
 
@@ -27,7 +29,7 @@ public class PostServiceImpl implements PostService {
 
     public Post savePost(Post post){
 
-        User user = userService.getUserByUsername(post.getPostedBy());
+        User user = userService.getUserByUsername(post.getUsername());
         post.setUser(user);
         post.setDate(new Date());
 
@@ -70,8 +72,21 @@ public class PostServiceImpl implements PostService {
 
         User user = userService.getUserByUsername(username);
 
-        return postRepository.findByPostedBy(user.getUserName())
+        return postRepository.findByUsername(user.getUserName())
                 .orElseThrow(()-> new NoSuchElementException("no post found for user"));
+
+    }
+
+    @Override
+    public void deletePostById(Long postId, Long userId) {
+
+        Post post = getPostById(postId);
+        User postAuthor = post.getUser();
+
+        if (!userId.equals(postAuthor.getId()) && !ADMIN_ID.equals(userId)){
+            throw new RuntimeException("NOT AUTHORIZED");
+        }
+        postRepository.deleteById(postId);
 
     }
 

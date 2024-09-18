@@ -1,7 +1,6 @@
 package com.example.blogpost.controller;
 
 import com.example.blogpost.service.CommentService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +34,10 @@ public class CommentController {
         {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("something went wrong.");
         }
+    }
+    @DeleteMapping("/{commentId}")
+    public void deletePostById(@PathVariable Long commentId, @RequestParam Long adminUserId){
+        commentService.deleteComment(commentId, adminUserId);
     }
 
 

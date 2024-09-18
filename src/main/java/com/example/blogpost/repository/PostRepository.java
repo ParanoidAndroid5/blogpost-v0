@@ -13,6 +13,7 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 
     List<Post> findAllByNameContaining(String name);
     List<Post> findByUser(User user);
-    Optional<List<Post>> findByPostedBy(String username);
+    Optional<List<Post>> findByUsername(String username);
+
 
 }
