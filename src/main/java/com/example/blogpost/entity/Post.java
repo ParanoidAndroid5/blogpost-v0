@@ -3,10 +3,11 @@ package com.example.blogpost.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +30,12 @@ public class Post {
     private String postedBy;
     private String img;
     private Date date;
+    @ColumnDefault("0")
     private int likeCount;
+    @ColumnDefault("0")
     private int viewCount;
+
+    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
 }

@@ -13,5 +13,7 @@ public interface PostService {
 
     void likePost(Long postId);
 
-    public List<Post> searchByName(String name );
+    List<Post> searchByName(String name );
+
+    List<Post> getPostsByUsername(String username);
 }
