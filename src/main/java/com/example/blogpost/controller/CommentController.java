@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api/comments")
 @CrossOrigin
 
 public class CommentController {
@@ -17,7 +17,7 @@ public class CommentController {
     private CommentService commentService;
 
 
-    @PostMapping("comments/create")
+    @PostMapping("/create")
     public ResponseEntity<?> createComment(@RequestParam Long postId, @RequestParam String postedBy, @RequestBody String content){
         try{
             return ResponseEntity.ok(commentService.createComment(postId, postedBy, content));
@@ -26,7 +26,7 @@ public class CommentController {
         }
     }
 
-    @GetMapping("comments/{postId}")
+    @GetMapping("/{postId}")
     public ResponseEntity<?> getCommentsByPostId(@PathVariable Long postId)
     {
         try{
