@@ -72,16 +72,13 @@ public class PostServiceImpl implements PostService {
     {
         return postRepository.findAllByNameContaining(name);
     }
+    @Override
+   public List<Post> getPostsByUsername(String username) {
+        User user = userService.getUserByUsername(username);
+        return postRepository.findByUsername(user.getUserName())
+               .orElseThrow(()-> new NoSuchElementException("no post found for user"));
 
-//    @Override
-//    public List<Post> getPostsByUsername(String username) {
-//
-//        User user = userService.getUserByUsername(username);
-//
-//        return postRepository.findByUsername(user.getUserName())
-//                .orElseThrow(()-> new NoSuchElementException("no post found for user"));
-//
-//    }
+   }
 
     @Override
     public void deletePostById(Long postId, Long userId) {
