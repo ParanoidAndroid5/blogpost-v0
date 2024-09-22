@@ -47,6 +47,16 @@ public class PostController {
         }
 
     }
+    @GetMapping("/{postId}/likes")
+    public ResponseEntity<Integer> getPostLikes(@PathVariable Long postId) {
+        try {
+            int likesCount = postService.getLikesCount(postId);
+            return ResponseEntity.ok(likesCount);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
     @PutMapping("/{postId}/like")
     public ResponseEntity<?> likePost(@PathVariable Long postId){
         try{
@@ -68,16 +78,16 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    @GetMapping("/{username}")
-    public ResponseEntity<?> getPostsByUserName(@PathVariable String username){
-        try{
-            return ResponseEntity.status(HttpStatus.OK).body(postService.getPostsByUsername(username));
-        }
-        catch(EntityNotFoundException e)
-        {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+//    @GetMapping("/{username}")
+//    public ResponseEntity<?> getPostsByUserName(@PathVariable String username){
+//        try{
+//            return ResponseEntity.status(HttpStatus.OK).body(postService.getPostsByUsername(username));
+//        }
+//        catch(EntityNotFoundException e)
+//        {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//    }
 
     @DeleteMapping("/{postId}")
     public void deletePostById(@PathVariable Long postId, @RequestParam Long adminUserId){

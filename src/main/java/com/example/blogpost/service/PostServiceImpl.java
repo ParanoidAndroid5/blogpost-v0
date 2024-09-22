@@ -62,20 +62,26 @@ public class PostServiceImpl implements PostService {
         }
     }
 
+    public int getLikesCount(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("Post not found"));
+        return post.getLikeCount();
+    }
+
     public List<Post> searchByName(String name )
     {
         return postRepository.findAllByNameContaining(name);
     }
 
-    @Override
-    public List<Post> getPostsByUsername(String username) {
-
-        User user = userService.getUserByUsername(username);
-
-        return postRepository.findByUsername(user.getUserName())
-                .orElseThrow(()-> new NoSuchElementException("no post found for user"));
-
-    }
+//    @Override
+//    public List<Post> getPostsByUsername(String username) {
+//
+//        User user = userService.getUserByUsername(username);
+//
+//        return postRepository.findByUsername(user.getUserName())
+//                .orElseThrow(()-> new NoSuchElementException("no post found for user"));
+//
+//    }
 
     @Override
     public void deletePostById(Long postId, Long userId) {

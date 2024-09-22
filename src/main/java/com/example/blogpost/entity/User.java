@@ -12,7 +12,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Column(name = "user_name")
     String userName;
+
     String password;
 
 

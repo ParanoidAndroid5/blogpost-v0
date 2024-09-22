@@ -4,14 +4,17 @@ import com.example.blogpost.entity.User;
 import com.example.blogpost.repository.UserRepository;
 import com.example.blogpost.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.blogpost.requests.UserLoginRequest;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin
+@CrossOrigin(origins = "*")
 
 
 public class UserController {
@@ -49,5 +52,16 @@ public class UserController {
     {
         userService.deleteById(userId, adminUserId);
 
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestBody UserLoginRequest loginRequest) {
+        boolean isAuthenticated = userService.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
+
+        if (isAuthenticated) {
+            return ResponseEntity.ok("Login successful");
+        } else {
+            return ResponseEntity.status(401).body("Invalid username or password");
+        }
     }
 }

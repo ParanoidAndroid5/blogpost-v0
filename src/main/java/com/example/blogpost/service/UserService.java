@@ -12,9 +12,12 @@ public interface UserService {
 
     User getUserById(Long userId);
 
-    User getUserByUsername(String username);
+    User getUserByUsername(String userName);
 
     User updateUser(Long userId, User updatedUser);
 
     void  deleteById(Long userId, Long adminId);
+
+    public boolean authenticate(String userName, String password);
+
 }

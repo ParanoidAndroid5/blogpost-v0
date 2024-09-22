@@ -32,9 +32,9 @@ public class UserServiceImpl  implements UserService {
     }
 
     @Override
-    public User getUserByUsername(String username) {
+    public User getUserByUsername(String userName) {
 
-       return userRepository.findByUserName(username)
+       return userRepository.findByUserName(userName)
                .orElseThrow(()-> new EntityNotFoundException("user not found."));
 
     }
@@ -61,4 +61,15 @@ public class UserServiceImpl  implements UserService {
         }
         userRepository.deleteById(userId);
     }
+
+
+    // Authenticate method
+    public boolean authenticate(String userName, String password) {
+        Optional<User> user = userRepository.findByUserName(userName);
+        if (user.isPresent() && user.get().getPassword().equals(password)) {
+            return true;
+        }
+        return false;
+    }
+
 }
