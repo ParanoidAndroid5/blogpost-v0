@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import com.example.blogpost.entity.User;
 import com.example.blogpost.repository.UserRepository;
+import com.example.blogpost.requests.UserCredentialRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +20,7 @@ import java.util.Optional;
 class UserServiceImplTest {
 
     private User mockUser;
+    private UserCredentialRequest mockRequest;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -30,6 +32,7 @@ class UserServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         mockUser = new User();
+        mockRequest = new UserCredentialRequest();
     }
 
     @Test
@@ -37,12 +40,12 @@ class UserServiceImplTest {
         String userName = "testUser";
         String password = "password123";
 
-        mockUser.setUserName(userName);
-        mockUser.setPassword(password);
+        mockRequest.setUsername(userName);
+        mockRequest.setPassword(password);
 
-        when(userRepository.findByUserName(userName)).thenReturn(Optional.ofNullable(mockUser));
+        when(userRepository.findByUserName(userName)).thenReturn(Optional.ofNullable(mockRequest.getUserEntity()));
 
-        boolean result = userService.authenticate(userName, password);
+        boolean result = userService.authenticate(mockRequest);
 
         assertTrue(result, "The user should be authenticated with valid credentials.");
     }
@@ -53,12 +56,14 @@ class UserServiceImplTest {
         String userName = "testUser";
         String password = "password123";
         String invalidPassword = "wrongPassword";
-        mockUser.setUserName(userName);
-        mockUser.setPassword(password);
+        mockRequest.setUsername(userName);
+        mockRequest.setPassword(invalidPassword);
 
+        mockUser = mockRequest.getUserEntity();
+        mockUser.setPassword(password);
         when(userRepository.findByUserName(userName)).thenReturn(Optional.ofNullable(mockUser));
 
-        boolean result = userService.authenticate(userName, invalidPassword);
+        boolean result = userService.authenticate(mockRequest);
 
         assertFalse(result, "The user should not be authenticated with an invalid password.");
     }
@@ -67,9 +72,11 @@ class UserServiceImplTest {
     void testAuthenticateUserNotFound() {
         // Arrange
         String userName = "nonExistentUser";
+        mockRequest.setUsername(userName);
+        mockRequest.setPassword("234");
         when(userRepository.findByUserName(userName)).thenReturn(null);
 
-        assertThrows(NullPointerException.class, () -> userService.authenticate(userName, "password"),
+        assertThrows(NullPointerException.class, () -> userService.authenticate(mockRequest),
                 "The authenticate method should throw a NullPointerException when the user is not found.");
     }
 }
