@@ -51,6 +51,21 @@ class UserServiceImplTest {
     }
 
     @Test
+    void testAuthenticateValidUserWithWhiteSpace() {
+        String userName = "   testUser   ";
+        String password = "  password123  ";
+
+        mockRequest.setUsername(userName);
+        mockRequest.setPassword(password);
+
+        when(userRepository.findByUserName(mockRequest.getUserEntity().getUserName())).thenReturn(Optional.ofNullable(mockRequest.getUserEntity()));
+
+        boolean result = userService.authenticate(mockRequest);
+
+        assertTrue(result, "The user should be authenticated with valid credentials.");
+    }
+
+    @Test
     void testAuthenticateInvalidPassword() {
         // Arrange
         String userName = "testUser";

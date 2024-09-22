@@ -66,8 +66,8 @@ public class UserServiceImpl  implements UserService {
 
     // Authenticate method
     public boolean authenticate(UserCredentialRequest request) {
-        User user = getUserByUsername(request.getUsername());
-        return user.getPassword().equals(request.getPassword());
+        User user = getUserByUsername(request.getUserEntity().getUserName());
+        return user.getPassword().equals(request.getUserEntity().getPassword());
     }
 
 }
