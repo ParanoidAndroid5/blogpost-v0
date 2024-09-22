@@ -18,6 +18,6 @@ public interface UserService {
 
     void  deleteById(Long userId, Long adminId);
 
-    public boolean authenticate(String userName, String password);
+    boolean authenticate(String userName, String password);
 
 }
