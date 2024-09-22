@@ -1,6 +1,7 @@
 package com.example.blogpost.service;
 
 import com.example.blogpost.entity.User;
+import com.example.blogpost.requests.UserCredentialRequest;
 
 import java.util.List;
 
@@ -18,6 +19,6 @@ public interface UserService {
 
     void  deleteById(Long userId, Long adminId);
 
-    boolean authenticate(String userName, String password);
+    boolean authenticate(UserCredentialRequest request);
 
 }

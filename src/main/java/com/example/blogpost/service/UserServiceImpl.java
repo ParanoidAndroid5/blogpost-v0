@@ -2,6 +2,7 @@ package com.example.blogpost.service;
 
 import com.example.blogpost.entity.User;
 import com.example.blogpost.repository.UserRepository;
+import com.example.blogpost.requests.UserCredentialRequest;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,8 +49,8 @@ public class UserServiceImpl  implements UserService {
 
         if(user.isPresent()){
             User updatedUser = user.get();
-            updatedUser.setUserName(newUser.getUserName());
-            updatedUser.setPassword(newUser.getPassword());
+            updatedUser.setUserName(newUser.getUserName().trim());
+            updatedUser.setPassword(newUser.getPassword().trim());
             userRepository.save(updatedUser);
             return updatedUser;
         }else return null;
@@ -64,9 +65,9 @@ public class UserServiceImpl  implements UserService {
 
 
     // Authenticate method
-    public boolean authenticate(String userName, String password) {
-        User user = getUserByUsername(userName);
-        return user.getPassword().equals(password);
+    public boolean authenticate(UserCredentialRequest request) {
+        User user = getUserByUsername(request.getUsername());
+        return user.getPassword().equals(request.getPassword());
     }
 
 }

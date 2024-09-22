@@ -1,16 +1,15 @@
 package com.example.blogpost.controller;
 
 import com.example.blogpost.entity.User;
-import com.example.blogpost.repository.UserRepository;
 import com.example.blogpost.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.blogpost.requests.UserLoginRequest;
+import com.example.blogpost.requests.UserCredentialRequest;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -31,8 +30,8 @@ public class UserController {
     }
 
     @PostMapping("/createUser")
-    public User createUser(@RequestBody User newUser){
-        return userService.saveUser(newUser);
+    public User createUser(@RequestBody UserCredentialRequest newUser){
+        return userService.saveUser(newUser.getUserEntity());
     }
 
 
@@ -42,7 +41,7 @@ public class UserController {
 
     }
     @PutMapping("/{userId}")
-    public User updateUser(@PathVariable long userId, @RequestBody User newUser){
+    public User updateUser(@PathVariable long userId,@Valid @RequestBody User newUser){
 
         return userService.updateUser(userId, newUser);
     }
@@ -55,8 +54,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody UserLoginRequest loginRequest) {
-        boolean isAuthenticated = userService.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
+    public ResponseEntity<String> loginUser(@RequestBody UserCredentialRequest loginRequest) {
+        boolean isAuthenticated = userService.authenticate(loginRequest);
 
         if (isAuthenticated) {
             return ResponseEntity.ok("Login successful");
