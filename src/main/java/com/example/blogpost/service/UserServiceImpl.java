@@ -65,11 +65,8 @@ public class UserServiceImpl  implements UserService {
 
     // Authenticate method
     public boolean authenticate(String userName, String password) {
-        Optional<User> user = userRepository.findByUserName(userName);
-        if (user.isPresent() && user.get().getPassword().equals(password)) {
-            return true;
-        }
-        return false;
+        User user = getUserByUsername(userName);
+        return user.getPassword().equals(password);
     }
 
 }
