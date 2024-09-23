@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.blogpost.requests.UserCredentialRequest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -54,13 +56,18 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody UserCredentialRequest loginRequest) {
+    public ResponseEntity<Map<String, String>> loginUser(@RequestBody UserCredentialRequest loginRequest) {
         boolean isAuthenticated = userService.authenticate(loginRequest);
 
+        Map<String, String> response = new HashMap<>();
         if (isAuthenticated) {
-            return ResponseEntity.ok("Login successful");
+            response.put("message", "Login successful");
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(401).body("Invalid username or password");
+            response.put("error", "Invalid username or password");
+            return ResponseEntity.status(401).body(response);
         }
     }
+
+
 }
