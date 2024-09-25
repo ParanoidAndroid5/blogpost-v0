@@ -1,6 +1,7 @@
 package com.example.blogpost.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
@@ -28,6 +29,7 @@ public class Post {
     @Column(length = 5000)
     private String content;
     private String username;
+    @JsonProperty("imgUrl")
     private String img;
     private Date date;
     @ColumnDefault("0")

@@ -61,7 +61,9 @@ public class UserController {
 
         Map<String, String> response = new HashMap<>();
         if (isAuthenticated) {
+            Long userId = userService.getUserByUsername(loginRequest.getUsername()).getId();
             response.put("message", "Login successful");
+            response.put("userId", String.valueOf(userId));
             return ResponseEntity.ok(response);
         } else {
             response.put("error", "Invalid username or password");
