@@ -19,10 +19,16 @@ public class PostController {
     private PostService postService;
 
     @PostMapping
-    public ResponseEntity<?> createPost (@RequestBody Post post)
-    {
+    public ResponseEntity<?> createPost (@RequestBody Post post){
 
-            Post createdPost = postService.savePost(post);
+        if(post.getImg() == null || post.getImg().isEmpty())
+        {
+            post.setImg("https://cdn.buttercms.com/oEgJ8IVRNySxVYWtxo9B");
+        }
+
+
+
+        Post createdPost = postService.savePost(post);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
 
 

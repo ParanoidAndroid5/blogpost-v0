@@ -22,3 +22,5 @@ public interface PostService {
 
     void deletePostById(Long postId, Long userId);
 }
+
+
