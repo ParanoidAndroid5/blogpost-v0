@@ -21,4 +21,5 @@ public interface UserService {
 
     boolean authenticate(UserCredentialRequest request);
 
+    boolean usernameExists(String userName);
 }

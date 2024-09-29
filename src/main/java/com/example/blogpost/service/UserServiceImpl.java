@@ -1,6 +1,7 @@
 package com.example.blogpost.service;
 
 import com.example.blogpost.entity.User;
+import com.example.blogpost.exception.UsernameAlreadyExistsException;
 import com.example.blogpost.repository.UserRepository;
 import com.example.blogpost.requests.UserCredentialRequest;
 import jakarta.persistence.EntityNotFoundException;
@@ -21,12 +22,21 @@ public class UserServiceImpl  implements UserService {
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
     public List<User> getAllUsers(){
         return userRepository.findAll();
     }
+
     public User saveUser(User NewUser){
-        return userRepository.save(NewUser);
+
+            // Kullanıcı adı kontrolü
+            if (usernameExists(NewUser.getUserName())) {
+                throw new UsernameAlreadyExistsException("Bu kullanıcı adı zaten alınmış.Lütfen başka bir kullanıcı adı ile devam ediniz.");
+            }
+            return userRepository.save(NewUser);
+
     }
+
     public User getUserById(Long userId)
     {
         return userRepository.findById(userId).orElse(null);
@@ -68,6 +78,11 @@ public class UserServiceImpl  implements UserService {
     public boolean authenticate(UserCredentialRequest request) {
         User user = getUserByUsername(request.getUserEntity().getUserName());
         return user.getPassword().equals(request.getUserEntity().getPassword());
+    }
+
+    @Override
+    public boolean usernameExists(String userName) {
+        return userRepository.findByUserName(userName).isPresent();
     }
 
 }
