@@ -15,9 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "*")
-
-
+@CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -43,8 +41,9 @@ public class UserController {
 
     }
     @PutMapping("/{userId}")
-    public User updateUser(@PathVariable long userId,@Valid @RequestBody User newUser){
+    public User updateUser(@PathVariable long userId, @RequestBody User newUser){
 
+        System.out.println("controller-newUser:"+ newUser);
         return userService.updateUser(userId, newUser);
     }
 
@@ -64,6 +63,7 @@ public class UserController {
             Long userId = userService.getUserByUsername(loginRequest.getUsername()).getId();
             response.put("message", "Login successful");
             response.put("userId", String.valueOf(userId));
+            response.put("username", loginRequest.getUsername());
             return ResponseEntity.ok(response);
         } else {
             response.put("error", "Invalid username or password");

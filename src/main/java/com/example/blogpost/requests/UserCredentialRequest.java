@@ -15,6 +15,8 @@ public class UserCredentialRequest {
         User user = new User();
         user.setUserName(username.trim());
         user.setPassword(password.trim());
+
+
         return user;
     }
 }

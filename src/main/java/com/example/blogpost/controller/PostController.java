@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:4200")
 public class PostController {
 
     @Autowired
@@ -98,5 +98,32 @@ public class PostController {
     public void deletePostById(@PathVariable Long postId, @RequestParam Long adminUserId){
         postService.deletePostById(postId, adminUserId);
     }
+
+    @PutMapping("/{postId}")
+    public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody Post updatedPost) {
+        try {
+            Post existingPost = postService.getPostById(postId);
+
+            if (updatedPost.getName() != null && !updatedPost.getName().isEmpty()) {
+                existingPost.setName(updatedPost.getName());
+            }
+
+            if (updatedPost.getContent() != null && !updatedPost.getContent().isEmpty()) {
+                existingPost.setContent(updatedPost.getContent());
+            }
+
+            if (updatedPost.getImg() != null && !updatedPost.getImg().isEmpty()) {
+                existingPost.setImg(updatedPost.getImg());
+            }
+
+
+
+            Post savedPost = postService.savePost(existingPost);
+            return ResponseEntity.ok(savedPost);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
 
 }

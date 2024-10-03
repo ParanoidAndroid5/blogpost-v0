@@ -7,6 +7,7 @@ import com.example.blogpost.requests.UserCredentialRequest;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,7 @@ import java.util.Optional;
 import static com.example.blogpost.constants.BlogpostConstants.ADMIN_ID;
 
 @Service
-public class UserServiceImpl  implements UserService {
+public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
@@ -23,51 +24,58 @@ public class UserServiceImpl  implements UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    public User saveUser(User NewUser){
+    public User saveUser(User NewUser) {
 
-            // Kullanıcı adı kontrolü
-            if (usernameExists(NewUser.getUserName())) {
-                throw new UsernameAlreadyExistsException("Bu kullanıcı adı zaten alınmış.Lütfen başka bir kullanıcı adı ile devam ediniz.");
-            }
-            return userRepository.save(NewUser);
+        // Kullanıcı adı kontrolü
+        if (usernameExists(NewUser.getUserName())) {
+            throw new UsernameAlreadyExistsException("Bu kullanıcı adı zaten alınmış.Lütfen başka bir kullanıcı adı ile devam ediniz.");
+        }
+        return userRepository.save(NewUser);
 
     }
 
-    public User getUserById(Long userId)
-    {
+    public User getUserById(Long userId) {
         return userRepository.findById(userId).orElse(null);
     }
 
     @Override
     public User getUserByUsername(String userName) {
 
-       return userRepository.findByUserName(userName)
-               .orElseThrow(()-> new EntityNotFoundException("user not found."));
+        return userRepository.findByUserName(userName)
+                .orElseThrow(() -> new EntityNotFoundException("user not found."));
 
     }
 
-    public User updateUser(Long userId, User newUser)
-    {
+    public User updateUser(Long userId, User newUser) {
         Optional<User> user = userRepository.findById(userId);
-        if (!userId.equals(newUser.getId()) && !ADMIN_ID.equals(userId)){
+        if (!userId.equals(newUser.getId()) && !ADMIN_ID.equals(userId)) {
             throw new RuntimeException("NOT AUTHORIZED");
         }
-
-        if(user.isPresent()){
+        if (user.isPresent()) {
             User updatedUser = user.get();
-            updatedUser.setUserName(newUser.getUserName().trim());
-            updatedUser.setPassword(newUser.getPassword().trim());
+            handleNewUserInfos(updatedUser, newUser);
             userRepository.save(updatedUser);
             return updatedUser;
-        }else return null;
+        } else return null;
     }
-    public void deleteById(Long userId, Long adminId){
 
-        if (!ADMIN_ID.equals(adminId)){
+    private void handleNewUserInfos(User updatedUser, User newUser) {
+        if (!StringUtils.isEmpty(newUser.getUserName())) {
+            updatedUser.setUserName(newUser.getUserName().trim());
+        }
+        if (!StringUtils.isEmpty(newUser.getPassword())) {
+            updatedUser.setPassword(newUser.getUserName().trim());
+        }
+    }
+
+
+    public void deleteById(Long userId, Long adminId) {
+
+        if (!ADMIN_ID.equals(adminId)) {
             throw new RuntimeException("NOT AUTHORIZED");
         }
         userRepository.deleteById(userId);
@@ -86,3 +94,4 @@ public class UserServiceImpl  implements UserService {
     }
 
 }
+

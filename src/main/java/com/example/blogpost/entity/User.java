@@ -1,5 +1,6 @@
 package com.example.blogpost.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -14,6 +15,7 @@ public class User {
     Long id;
 
     @NotNull
+    @JsonProperty("username")
     @Column(name = "user_name")
     String userName;
 
