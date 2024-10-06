@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.example.blogpost.constants.BlogpostConstants.ADMIN_ID;
+import static com.example.blogpost.entity.User.isUserAdmin;
+import static com.example.blogpost.entity.User.isUserMatching;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -71,11 +73,14 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = getCommentById(commentId);
         User commentAuthor = comment.getUser();
 
-        if (!userId.equals(commentAuthor.getId()) && !ADMIN_ID.equals(userId)){
+        if (!canUserDeleteComment(comment.getPost().getUser().getId(), comment.getUserId(), userId)){
             throw new RuntimeException("NOT AUTHORIZED");
         }
         commentRepository.deleteById(commentId);
 
+    }
+    private boolean canUserDeleteComment(Long postAuthorId, Long commentAuthorId, Long userId){
+        return isUserMatching(userId, commentAuthorId) || isUserAdmin(userId) || isUserMatching(userId, postAuthorId);
     }
 }
 

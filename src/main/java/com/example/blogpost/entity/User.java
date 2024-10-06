@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import static com.example.blogpost.constants.BlogpostConstants.ADMIN_ID;
+
 @Entity
 @Table(name="users")
 @Data
@@ -22,5 +24,10 @@ public class User {
     @NotNull
     String password;
 
-
+    public static boolean isUserAdmin(Long userId){
+       return isUserMatching(ADMIN_ID, userId);
+    }
+    public static boolean isUserMatching(Long currentUserId, Long otherUserId) {
+        return currentUserId.equals(otherUserId);
+    }
 }
