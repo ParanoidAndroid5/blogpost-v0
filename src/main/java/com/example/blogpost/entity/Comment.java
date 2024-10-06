@@ -2,6 +2,7 @@ package com.example.blogpost.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
@@ -34,6 +35,13 @@ public class Comment {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     User user;
+
+    // userId'yi JSON'da göstermek için getter metodu
+    @JsonProperty("user_id")
+    public Long getUserId() {
+        return this.user != null ? this.user.getId() : null;
+    }
+
 
 
 }

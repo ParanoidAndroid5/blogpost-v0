@@ -12,5 +12,5 @@ public interface CommentService {
 
     Comment getCommentById(Long commentId);
 
-    void deleteComment(Long postId, Long userId);
+    void deleteComment(Long commentId, Long userId);
 }
